@@ -1,0 +1,158 @@
+---
+title: "vignette_centroidr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{vignette_centroidr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(centroidr)
+```
+
+This is the first package I am creating and as such it is sort of an excercise.
+
+# The Purpose
+Why calculate centroids? I was looking for an easy way to express 
+two-dimensional spread of a three point sample.
+I have two variables for each observation that are plotted on an xy scatter plot 
+and each sample has three separate measurements.
+This produces three points. Now, the variance of single variables can be easily 
+expressed as standard deviation or, well, variance,
+but the spread of the three points in the plot is hard to estimate at an eye's glance.
+
+
+```{r, echo = FALSE, fig.show = 'asis', fig.width = 3, fig.height = 3, fig.cap = "a triangle"}
+a <- matrix(c(0.398, 0.2104, 1, 0.4865, 0.0389, 0), 3, 2)
+plot(a, xaxt = 'n', yaxt = 'n', xlab = '', ylab = '', bty = 'n')
+lines(rbind(a, a), lty = 1, type = 'c')
+```
+
+## The Method
+
+At first I focused on the triangle formed by the three points and considered:
+
+* the triangle's circumference
+* the tirangle's surface area
+
+The methods fail if a sample has a point missing.
+Moreover, my case of a three-point sample is rather specific, if common.
+A more robust metric should work for any number of replicates.
+Calculating the circumference for a polygon of more than three vertices is a non-trivial matter.
+
+On the other hand, one could calculate the sum of distances between each pair of points
+(for three points this is actually the circumference), making the method robust
+for any number of replicates.
+
+The circumference (triangle-specific) and surface methods only worked well when the angles were relatively constant.
+The sum of distances approach is very susceptible to missing points.
+
+Another approach was needed.
+
+
+That is how I came to consider the centroid: the point in a triangle, 
+where all medians intersect (the median being the line between a vertex 
+and the middle point of its opposite side).
+
+The coordinates of the centroid can be easily calculated by averaging the respective coordinates fo all vertices
+(this actually works for any polygon). Each vertex has a certain distance 
+from the centroid and these distances can easily be used to express the spread of the points.
+
+
+```{r echo = FALSE, fig.show = "asis", fig.cap = "centroid of a triangle", fig.height = 3, fig.width = 3}
+Scale <- function(x) return((x - min(x)) / max(x - min(x)))
+plot(a, xaxt = 'n', yaxt = 'n', xlab = '', ylab = '', bty = 'n')
+lines(rbind(a, a), lty = 1, type = 'c')
+C <- centroid(a)
+points(C[1], C[2], pch = 16)
+lines(rbind(a[1,], C), lty = 2, type = 'c')
+lines(rbind(a[2,], C), lty = 2, type = 'c')
+lines(rbind(a[3,], C), lty = 2, type = 'c')
+```
+
+
+
+The basic problem was collapsing variances in two dimensions to a one-dimensional
+value that can be intuitively understood. Centroid distances can not only collapse 
+any number of dimensions, they also work just as well with any number of replicates.
+
+Once the centroid distances are computed, the issue then becomes how to translate them 
+into a single numebr that will express the two-dimensional spread. Again, I tested two metrics:
+
+* centroid distance mean
+* centroid distance standard deviation
+
+Let us consider some examples.
+
+
+```{r echo = FALSE}
+
+```
+
+We will generate nine paris of random three-point samples,
+plot them together for visual inspection and have a look at
+how the four different spread metrics compare between them.
+
+The samples are randomly generated. Feel free to reload the vignette to study more examples.
+
+```{r echo = FALSE, fig.cap = 'simulation results', fig.show = 'asis', fig.height = 7, fig.width = 7}
+fun <- function (iterations = 9) {
+  # prepare function that will test different metrics for a pair of triangles
+  f <- function(iteration) {
+    # generate and plot two triangles
+      x1 <- Scale(matrix(rnorm(6, 0, 1.25), 3,2))
+      x2 <- Scale(matrix(rnorm(6, 0, 1.25), 3,2))
+      plot.new()
+      plot.window(c(0, 1), c(0, 1))
+      points(x1)
+      lines(rbind(x1, x1), lty = 2, type = 'c')
+      points(x2, pch = 16)
+      lines(rbind(x2, x2))
+      # add iteration number in upper-right corner
+      text(x = 0.95, y = 0.95, labels = as.character(iteration))
+      # function list to calculate various metrics
+      fs <- list(distance_sum = function(x) sum(dist(x)),
+                 surface_area = function(x) geometry::polyarea(x[,1], x[,2]),
+                 cendist_sum = function(x) sum(cendist(x)),
+                 cendist_mean = function(x) mean(cendist(x)),
+                 cendist_var = function(x) var(cendist(x)))
+      # get metrics for both triangles
+      metrics <- sapply(list(x1, x2), function(X) sapply(fs, function(f) f(X)))
+      # return the metrics' ratio
+      round(metrics[, 1] / metrics[, 2], 2)
+      }
+ # prepare graphics layout
+  panels = 1:(ceiling(sqrt(iterations))^2)
+  layout(mat = matrix(panels, ceiling(sqrt(iterations)),ceiling(sqrt(iterations)), T))
+  # run the desired numebr of simulations; triangle pairs are plotted and metric ratios returned
+  sapply(1:iterations, f)
+}
+
+fun(9)
+```
+
+Major points:
+
+* Surface area can vary greatly with slight sifts of a single point. 
+For triangles this is easy to spot when two vertices are far apart 
+and the third is only slightly removed from the opposite side.
+* Centroid distance variance is completely unreliable as it stays constant in equilateral triangles of any size.
+* Total vertex distance, total centroid distance and mean cendtoid distance are quite similar in efficiency. 
+This holds for triangles but may fail for polygons with more vertices.
+Total distances will, however, certainly fail in the case of missing points, 
+whereas mean centroid distance will be more robust.
+
+# Conclusion
+
+Mean centroid distance seems to be a good measure of multidimensional spread.
+None of the function returns a summarized single value rather they return distances 
+for all existing vertices so the user can easily go for the median rather than the mean
+as well as exclude specific points before summarizing.

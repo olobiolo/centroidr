@@ -79,6 +79,10 @@ cendist.data.frame <- function(x, ...) {
   cendist.matrix(m)
 }
 
+#' @export
+#' @describeIn cendist see \code{\link[metamethods]{data.frame__to__grouped_df}}
+cendist.grouped_df <- metamethods::data.frame__to__grouped_df(cendist.data.frame)
+
 #' @examples
 #' m <- matrix(rnorm(15), 5,3)
 #' cendist(m)

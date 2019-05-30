@@ -5,6 +5,7 @@
 \alias{centroid.numeric}
 \alias{centroid.matrix}
 \alias{centroid.data.frame}
+\alias{centroid.grouped_df}
 \title{Find centroid}
 \usage{
 centroid(x, ...)
@@ -14,6 +15,8 @@ centroid(x, ...)
 \method{centroid}{matrix}(x, ...)
 
 \method{centroid}{data.frame}(x, ...)
+
+\method{centroid}{grouped_df}(x, ...)
 }
 \arguments{
 \item{x}{matrix or data frame with observations in rows and dimensions in columns}
@@ -40,6 +43,8 @@ The data frame method isolates relevant columns as a matrix and calls the matrix
 \item \code{matrix}: simply averages columns, omitting NAs
 
 \item \code{data.frame}: extracts the requested columns and converts them to a matrix and then calls the matrix method
+
+\item \code{grouped_df}: see \code{\link[metamethods]{data.frame__to__grouped_df}}
 }}
 
 \section{Column specification}{

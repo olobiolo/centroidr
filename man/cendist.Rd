@@ -5,6 +5,7 @@
 \alias{cendist.numeric}
 \alias{cendist.matrix}
 \alias{cendist.data.frame}
+\alias{cendist.grouped_df}
 \title{Compute distances from centroid}
 \usage{
 cendist(x, ...)
@@ -14,6 +15,8 @@ cendist(x, ...)
 \method{cendist}{matrix}(x, ...)
 
 \method{cendist}{data.frame}(x, ...)
+
+\method{cendist}{grouped_df}(x, ...)
 }
 \arguments{
 \item{x}{numeric vector, matrix or data frame}
@@ -42,6 +45,8 @@ and then the point-centroid distances are computed by \code{euclidean}.
 if \code{x} only has one column, drops dimensions and calls vector method
 
 \item \code{data.frame}: extracts the requested columns and converts them to a matrix and then calls the matrix method
+
+\item \code{grouped_df}: see \code{\link[metamethods]{data.frame__to__grouped_df}}
 }}
 
 \section{Special cases}{

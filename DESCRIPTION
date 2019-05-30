@@ -2,7 +2,7 @@ Package: centroidr
 Type: Package
 Date: 2019-04-05
 Title: Find Centroid of a Set of Points in n-dimensional Space
-Version: 1.0.3
+Version: 1.1.3
 Description: Given a set of coordinates, the package finds the coordinates of their centroid.
     It can also calculate eucledian distances between the centroid and each point in the set.
     Methods are available for vector, matrix and data frame but not for grouped data frame (dplyr style).
@@ -11,7 +11,8 @@ Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.5.0)
 Imports: 
-    geometry
+    geometry,
+    metamethods (>= 0.1.0)
 RoxygenNote: 6.1.1
 Suggests: 
     knitr,

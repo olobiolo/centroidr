@@ -1,5 +1,5 @@
 ---
-title: "vignette_centroidr"
+title: "Variance by Centroids"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{vignette_centroidr}
@@ -14,12 +14,17 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, echo = FALSE}
 library(centroidr)
 ```
 
+####Estimate multidimensional variance of a sample.
 This is the first package I am creating and as such it is sort of an excercise.
 
+The statistics here is very much amateurish.
+```{r, echo = FALSE}
+cat('\n\n\n')
+```
 # The Purpose
 Why calculate centroids? I was looking for an easy way to express 
 two-dimensional spread of a three point sample.

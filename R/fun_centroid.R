@@ -81,6 +81,10 @@ centroid.data.frame <- function(x, ...) {
   centroid.matrix(m)
 }
 
+#' @export
+#' @describeIn centroid see \code{\link[metamethods]{data.frame__to__grouped_df}}
+centroid.grouped_df <- metamethods::data.frame__to__grouped_df(centroid.data.frame)
+
 #' @examples
 #' m <- matrix(rnorm(15), 5,3)
 #' centroid(m)

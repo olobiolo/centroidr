@@ -15,4 +15,14 @@ Check the vignette for my thoughts on the matter.
 
 All code is in R and the functions are very simple but I did get a chance to practise documenting S3 methods.
 
+
+Install the package with:
+
+devtools::install_github('olobiolo/centroidr')
+
+or, if you want to be able to view the vignette:
+
+devtools::install_github('olobiolo/centroidr', build = TRUE, build_opts = c("--no-resave-data", "--no-manual")
+
+
 AC

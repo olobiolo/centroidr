@@ -22,7 +22,7 @@ devtools::install_github('olobiolo/centroidr')
 
 or, if you want to be able to view the vignette:
 
-devtools::install_github('olobiolo/centroidr', build = TRUE, build_opts = c("--no-resave-data", "--no-manual")
+devtools::install_github('olobiolo/centroidr', build = TRUE, build_opts = c("--no-resave-data", "--no-manual"), force = TRUE)
 
 
 AC

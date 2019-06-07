@@ -20,6 +20,5 @@ Suggests:
     testthat
 VignetteBuilder: knitr
 URL: http://github.com/olobiolo/centroidr
-BugReports: http://github.com/hadley/dplyr/issues
 Author: person('Aleksander', 'Chlebowski', email = 'olobiolo@gmail.com', role = c('aut', 'cre'))
 Maintainer: <olobiolo@gmail.com>

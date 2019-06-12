@@ -13,6 +13,7 @@ Depends: R (>= 3.5.0)
 Imports: 
     geometry,
     metamethods (>= 0.1.4)
+Remotes: olobiolo/metamethods
 RoxygenNote: 6.1.1
 Suggests: 
     knitr,

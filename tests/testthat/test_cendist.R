@@ -9,7 +9,15 @@ d <- as.data.frame(m)
 names(d) <- c('one', 'two', 'three')
 d$cat <- letters[1:3]
 
+d1 <- cbind(d, group = 'A')
+d2 <- cbind(d, group = 'B')
+d2[1:3] <- d2[1:3] * 5
+dd <- rbind(d1, d2)
 
+test_that("arguments check out", {
+  expect_error(cendist("3.456")) # argument is not numeric
+  expect_warning(cendist(m1c)) # matrix with one column
+})
 
 test_that('centroid distances are calculated properly', {
   expect_equal(cendist(v), -4:4)
@@ -31,4 +39,12 @@ test_that('column specification errors', {
   expect_error(cendist(d, one, 2)) # columns specified differently
   expect_error(cendist(d, 1, 'two')) # columns specified differently
   expect_error(cendist(d, c('one', 'two'))) # columns specified as vector
+})
+
+test_that("grouped data frames are handled correctly", {
+  expect_equal(round(cendist(dd), 5), c(20.85665, 19.28730, 17.74824, 12.12436, 19.28730, 27.33130))
+  # expect_equal(cendist(dplyr::group_by(dd, group)), data.frame(one = c(1.732051, 8.660254),
+  #                                                              two = c(0, 0),
+  #                                                              three = c(1.732051, 8.660254),
+  #                                                              group = c('A', 'B')))
 })
